@@ -1,0 +1,100 @@
+# ═══════════════════════════════════════════════════
+# RBAC - Auth Service
+# ═══════════════════════════════════════════════════
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: auth-service-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: auth-service-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: auth-service-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: auth-service-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: auth-service-role
+  apiGroup: rbac.authorization.k8s.io
+
+# ═══════════════════════════════════════════════════
+# RBAC - Quiz Service
+# ═══════════════════════════════════════════════════
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: quiz-service-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: quiz-service-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: quiz-service-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: quiz-service-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: quiz-service-role
+  apiGroup: rbac.authorization.k8s.io
+
+# ═══════════════════════════════════════════════════
+# RBAC - Frontend Service
+# ═══════════════════════════════════════════════════
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: frontend-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: frontend-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: frontend-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: frontend-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: frontend-role
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quiz-service
+  template:
+    metadata:
+      labels:
+        app: quiz-service
+    spec:
+      serviceAccountName: quiz-service-sa
+      containers:
+        - name: quiz-service
+          image: noureddine078/tcf-quiz-service:1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5002
+          env:
+            - name: PORT
+              value: "5002"
+            - name: NODE_ENV
+              value: "production"
+            - name: DB_HOST
+              value: "postgres-service"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "tcf_prep_db"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: JWT_SECRET
+            - name: ALLOWED_ORIGINS
+              value: "http://tcf-prep.local"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz-service
+spec:
+  selector:
+    app: quiz-service
+  ports:
+    - name: http
+      port: 5002
+      targetPort: 5002
+  type: ClusterIP

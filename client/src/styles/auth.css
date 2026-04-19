@@ -1,0 +1,461 @@
+/* ==================== LAYOUT SPLIT ==================== */
+.auth-section {
+    min-height: calc(100vh - 65px - 140px); /* viewport - header - footer */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    background: #fafafa;
+}
+
+.auth-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1100px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    overflow: hidden;
+    min-height: 620px;
+}
+
+/* ==================== IMAGE CÔTÉ GAUCHE ==================== */
+.auth-image {
+    position: relative;
+    min-height: 620px;
+}
+
+.auth-image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.auth-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(17, 17, 17, 0.25) 0%,
+        rgba(17, 17, 17, 0.65) 100%
+    );
+    z-index: 1;
+}
+
+.auth-image-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 48px 40px;
+    z-index: 2;
+    color: #ffffff;
+}
+
+.auth-image-text h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+    margin-bottom: 0.8rem;
+}
+
+.auth-image-text p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* ==================== FORMULAIRES CÔTÉ DROIT ==================== */
+.auth-forms {
+    padding: 72px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ── Tabs ── */
+.auth-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 36px;
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.auth-tab {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #757575;
+    background: none;
+    border: none;
+    padding: 0 0 14px;
+    margin-right: 28px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.25s ease;
+    letter-spacing: 0.2px;
+}
+
+.auth-tab:hover {
+    color: #111111;
+}
+
+.auth-tab.active {
+    color: #111111;
+    font-weight: 700;
+}
+
+/* ligne active sous le tab */
+.auth-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #111111;
+}
+
+/* ── Formulaire commune ── */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Groupes de champs ── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #111111;
+    letter-spacing: 0.2px;
+}
+
+/* deux champs côte à côte (prénom / nom) */
+.form-row-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ligne "Rester connecté" + "Mot de passe oublié" */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* ── Input avec icône ── */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper .input-icon {
+    position: absolute;
+    left: 14px;
+    color: #9ca3af;
+    flex-shrink: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+    width: 100%;
+    padding: 13px 14px 13px 42px;   /* left padding pour l'icône */
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: #111111;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    transition: border-color 0.25s ease, background 0.25s ease;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.input-wrapper input::placeholder {
+    color: #9ca3af;
+}
+
+.input-wrapper input:focus,
+.input-wrapper select:focus {
+    border-color: #111111;
+    background: #ffffff;
+}
+
+/* select : chevron personnalisé via l'icône SVG (déjà dans le HTML) */
+.select-wrapper .input-icon {
+    right: 14px;
+    left: auto;
+    pointer-events: none;
+}
+
+.select-wrapper select {
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.select-wrapper select option {
+    color: #111111;
+}
+
+/* ── Toggle mot de passe (œil) ── */
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    transition: color 0.25s;
+    z-index: 1;
+}
+
+.toggle-password:hover {
+    color: #111111;
+}
+
+/* ── Indicateur de force du mot de passe ── */
+.password-strength {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.strength-bar {
+    height: 4px;
+    width: 100px;
+    background: #e5e5e5;
+    border-radius: 2px;
+    transition: background 0.3s ease, width 0.3s ease;
+}
+
+.strength-bar.weak   { background: #ef4444; width: 25px; }
+.strength-bar.fair   { background: #f59e0b; width: 50px; }
+.strength-bar.good   { background: #3b82f6; width: 75px; }
+.strength-bar.strong { background: #22c55e; width: 100px; }
+
+.strength-label {
+    font-size: 0.78rem;
+    color: #757575;
+    font-weight: 500;
+}
+
+/* ── Checkbox personnalisé ── */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #757575;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox-custom {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 4px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.checkbox-label input:checked + .checkbox-custom {
+    background: #111111;
+    border-color: #111111;
+}
+
+/* tick mark via pseudo-element */
+.checkbox-label input:checked + .checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* ── Lien "Mot de passe oublié" ── */
+.forgot-link {
+    font-size: 0.82rem;
+    color: #757575;
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 0.25s;
+}
+
+.forgot-link:hover {
+    color: #111111;
+}
+
+/* ── Liens dans les termes ── */
+.terms-link {
+    color: #111111;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid #111111;
+}
+
+.terms-link:hover {
+    color: #757575;
+    border-color: #757575;
+}
+
+/* ── Bouton plein largeur ── */
+.btn-full {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.95rem;
+}
+
+/* ── Séparateur "ou" ── */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e5e5;
+}
+
+.auth-divider span {
+    font-size: 0.82rem;
+    color: #9ca3af;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Bouton Google ── */
+.btn-google {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 13px;
+    background: #ffffff;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 30px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #111111;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+}
+
+.btn-google:hover {
+    border-color: #111111;
+    background: #fafafa;
+}
+
+/* ── Lien switch formulaire ── */
+.auth-switch {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #757575;
+    margin-top: 4px;
+}
+
+.auth-switch .switch-tab {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: #111111;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    border-bottom: 1.5px solid #111111;
+    transition: color 0.25s, border-color 0.25s;
+}
+
+.auth-switch .switch-tab:hover {
+    color: #757575;
+    border-color: #757575;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 900px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-image {
+        min-height: 280px;
+    }
+
+    .auth-forms {
+        padding: 52px 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .auth-section {
+        padding: 32px 16px;
+    }
+
+    .auth-forms {
+        padding: 40px 28px;
+    }
+
+    .form-row-two {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .auth-image-text {
+        padding: 32px 24px;
+    }
+
+    .auth-image-text h2 {
+        font-size: 1.3rem;
+    }
+}

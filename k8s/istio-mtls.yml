@@ -1,0 +1,105 @@
+# ═══════════════════════════════════════════════════════════
+# Istio mTLS - Chiffrement mutuel entre tous les services
+# Prérequis : istioctl install --set profile=default
+# ═══════════════════════════════════════════════════════════
+
+# Politique globale : tout le namespace default exige mTLS STRICT
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default-mtls
+  namespace: default
+spec:
+  mtls:
+    mode: STRICT
+
+# Exceptions PERMISSIVE pour les services exposés via l'Ingress
+# L'Ingress controller envoie du HTTP simple (pas mTLS)
+# PERMISSIVE = accepte les deux : mTLS entre services + HTTP depuis l'Ingress
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: frontend-permissive
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  mtls:
+    mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: auth-service-permissive
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: auth-service
+  mtls:
+    mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: quiz-service-permissive
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: quiz-service
+  mtls:
+    mode: PERMISSIVE
+
+# ═══════════════════════════════════════════════════
+# DestinationRules : forcer mTLS vers chaque service
+# ═══════════════════════════════════════════════════
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: auth-service-mtls
+  namespace: default
+spec:
+  host: auth-service
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: quiz-service-mtls
+  namespace: default
+spec:
+  host: quiz-service
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: frontend-service-mtls
+  namespace: default
+spec:
+  host: frontend-service
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: postgres-service-mtls
+  namespace: default
+spec:
+  host: postgres-service
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL

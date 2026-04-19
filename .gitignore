@@ -1,0 +1,9 @@
+.env
+**/.env
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+k8s/postgres-secret.yml
+istio-*/
+

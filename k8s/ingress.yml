@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tcf-prep-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: tcf-prep.local
+      http:
+        paths:
+          # Auth service routes
+          - path: /api/auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 5001
+          - path: /api/users
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 5001
+          # Quiz service routes
+          - path: /api/exercises
+            pathType: Prefix
+            backend:
+              service:
+                name: quiz-service
+                port:
+                  number: 5002
+          - path: /api/quiz
+            pathType: Prefix
+            backend:
+              service:
+                name: quiz-service
+                port:
+                  number: 5002
+          # Frontend - route par défaut (doit être en dernier)
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80

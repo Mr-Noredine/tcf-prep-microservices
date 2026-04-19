@@ -1,0 +1,288 @@
+import { useState } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import '../../styles/auth.css';
+
+const Auth = () => {
+  const [activeTab, setActiveTab] = useState('login');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { login, register, user } = useAuth();
+
+  if (user) return <Navigate to="/exercices" replace />;
+
+  // Login form data
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: ''
+  });
+
+  // Register form data
+  const [registerData, setRegisterData] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    level: 'A1'
+  });
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    const result = await login(loginData.email, loginData.password);
+    
+    setLoading(false);
+
+    if (result.success) {
+      navigate('/exercices');
+    } else {
+      setError(result.message);
+    }
+  };
+
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    const result = await register(registerData);
+
+    setLoading(false);
+
+    if (result.success) {
+      navigate('/exercices');
+    } else {
+      setError(result.message);
+    }
+  };
+
+  const getPasswordStrength = (password) => {
+    if (password.length === 0) return { label: '', className: '' };
+    if (password.length < 6) return { label: 'Faible', className: 'weak' };
+    if (password.length < 8) return { label: 'Moyen', className: 'fair' };
+    if (password.length < 12) return { label: 'Bon', className: 'good' };
+    return { label: 'Fort', className: 'strong' };
+  };
+
+  const passwordStrength = getPasswordStrength(registerData.password);
+
+  return (
+    <main>
+      <section className="auth-section">
+        <div className="auth-container">
+          <div className="auth-image">
+            <img
+              src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800"
+              alt="Étudiant"
+              loading="lazy"
+            />
+            <div className="auth-image-overlay"></div>
+            <div className="auth-image-text">
+              <h2>Commencez votre parcours</h2>
+              <p>Rejoignez plus de 10 000 apprenants.</p>
+            </div>
+          </div>
+
+          <div className="auth-forms">
+            {/* Tabs */}
+            <div className="auth-tabs">
+              <button
+                className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('login');
+                  setError('');
+                }}
+              >
+                Connexion
+              </button>
+              <button
+                className={`auth-tab ${activeTab === 'register' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('register');
+                  setError('');
+                }}
+              >
+                Créer un compte
+              </button>
+            </div>
+
+            {/* Error message */}
+            {error && (
+              <div style={{
+                padding: '12px',
+                background: '#fee2e2',
+                border: '1px solid #ef4444',
+                borderRadius: '8px',
+                color: '#991b1b',
+                fontSize: '0.9rem',
+                marginBottom: '20px'
+              }}>
+                {error}
+              </div>
+            )}
+
+            {/* Login Form */}
+            {activeTab === 'login' && (
+              <form className="auth-form" onSubmit={handleLoginSubmit}>
+                <div className="form-group">
+                  <label htmlFor="login-email">Email</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="email"
+                      id="login-email"
+                      placeholder="votre@email.com"
+                      required
+                      value={loginData.email}
+                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="login-password">Mot de passe</label>
+                  <div className="input-wrapper">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="login-password"
+                      placeholder="Votre mot de passe"
+                      required
+                      value={loginData.password}
+                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                    />
+                    <button
+                      type="button"
+                      className="toggle-password"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? '🙈' : '👁️'}
+                    </button>
+                  </div>
+                </div>
+
+                <button type="submit" className="btn-primary btn-full" disabled={loading}>
+                  {loading ? 'Connexion...' : 'Se connecter'}
+                </button>
+
+                <p className="auth-switch">
+                  Pas de compte ?{' '}
+                  <button
+                    type="button"
+                    className="switch-tab"
+                    onClick={() => setActiveTab('register')}
+                  >
+                    Créer un compte
+                  </button>
+                </p>
+              </form>
+            )}
+
+            {/* Register Form */}
+            {activeTab === 'register' && (
+              <form className="auth-form" onSubmit={handleRegisterSubmit}>
+                <div className="form-row-two">
+                  <div className="form-group">
+                    <label>Prénom</label>
+                    <div className="input-wrapper">
+                      <input
+                        type="text"
+                        required
+                        value={registerData.firstname}
+                        onChange={(e) => setRegisterData({ ...registerData, firstname: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Nom</label>
+                    <div className="input-wrapper">
+                      <input
+                        type="text"
+                        required
+                        value={registerData.lastname}
+                        onChange={(e) => setRegisterData({ ...registerData, lastname: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Email</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="email"
+                      required
+                      value={registerData.email}
+                      onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Mot de passe</label>
+                  <div className="input-wrapper">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={registerData.password}
+                      onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                    />
+                    <button
+                      type="button"
+                      className="toggle-password"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? '🙈' : '👁️'}
+                    </button>
+                  </div>
+                  {registerData.password && (
+                    <div className="password-strength">
+                      <div className={`strength-bar ${passwordStrength.className}`}></div>
+                      <span className="strength-label">{passwordStrength.label}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label>Niveau actuel</label>
+                  <div className="input-wrapper select-wrapper">
+                    <select
+                      value={registerData.level}
+                      onChange={(e) => setRegisterData({ ...registerData, level: e.target.value })}
+                    >
+                      <option value="A1">A1 - Débutant</option>
+                      <option value="A2">A2 - Élémentaire</option>
+                      <option value="B1">B1 - Intermédiaire</option>
+                      <option value="B2">B2 - Intermédiaire avancé</option>
+                      <option value="C1">C1 - Avancé</option>
+                      <option value="C2">C2 - Maîtrise</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" className="btn-primary btn-full" disabled={loading}>
+                  {loading ? 'Création...' : 'Créer mon compte'}
+                </button>
+
+                <p className="auth-switch">
+                  Déjà un compte ?{' '}
+                  <button
+                    type="button"
+                    className="switch-tab"
+                    onClick={() => setActiveTab('login')}
+                  >
+                    Se connecter
+                  </button>
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default Auth;
